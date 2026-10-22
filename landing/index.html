@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InDrive Inspector</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              display: ["Outfit", "sans-serif"],
+            },
+            colors: {
+              app: {
+                bg: "#0A0C10",
+                surface: "#12161E",
+                surfaceLight: "#1E2433",
+                accent: "#D4F83F", // The neon yellow/green from the app
+                accentHover: "#BCE22A",
+                text: "#F8FAFC",
+                muted: "#94A3B8",
+                danger: "#FF6B6B",
+                warning: "#FFD93D",
+                success: "#4ADE80",
+              },
+            },
+            animation: {
+              float: "float 6s ease-in-out infinite",
+              "pulse-glow":
+                "pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+            },
+            keyframes: {
+              float: {
+                "0%, 100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-20px)" },
+              },
+              pulseGlow: {
+                "0%, 100%": {
+                  opacity: 1,
+                  boxShadow: "0 0 0 0 rgba(212, 248, 63, 0.4)",
+                },
+                "50%": {
+                  opacity: 0.8,
+                  boxShadow: "0 0 20px 10px rgba(212, 248, 63, 0.1)",
+                },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background-color: #0a0c10;
+        color: #f8fafc;
+      }
+      .glass-nav {
+        background: rgba(10, 12, 16, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .gradient-text {
+        background: linear-gradient(to right, #ffffff, #94a3b8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .accent-gradient-text {
+        background: linear-gradient(to right, #d4f83f, #4ade80);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0a0c10;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #1e2433;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #334155;
+      }
+
+      .phone-mockup {
+        border: 8px solid #1e2433;
+        border-radius: 2.5rem;
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        position: relative;
+      }
+      .phone-mockup::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40%;
+        height: 24px;
+        background: #1e2433;
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+        z-index: 10;
+      }
+    </style>
+  </head>
+  <body
+    class="antialiased selection:bg-app-accent selection:text-app-bg overflow-x-hidden"
+  >
+    <!-- Navigation -->
+    <nav
+      class="fixed w-full z-50 glass-nav transition-all duration-300 bg-app-bg/90"
+    >
+      <div
+        class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <div class="flex items-center gap-2">
+          <img class="w-8 h-8 rounded-lg bg-app-accent" src="./icon.svg" />
+
+          <span class="font-display font-bold text-xl tracking-tight"
+            >InDrive <span class="text-app-accent">Inspector</span></span
+          >
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+      <!-- Background Glows -->
+      <div
+        class="absolute top-1/4 left-0 w-96 h-96 bg-app-accent opacity-5 rounded-full blur-[120px] -z-10"
+      ></div>
+      <div
+        class="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-blue-500 opacity-5 rounded-full blur-[150px] -z-10"
+      ></div>
+
+      <div
+        class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center"
+      >
+        <div class="space-y-8 relative z-10 text-center lg:text-left">
+          <div
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-app-surface border border-white/10 text-sm font-medium text-app-accent mb-4"
+          >
+            <span class="relative flex h-2.5 w-2.5">
+              <span
+                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-app-accent opacity-75"
+              ></span>
+              <span
+                class="relative inline-flex rounded-full h-2.5 w-2.5 bg-app-accent"
+              ></span>
+            </span>
+            La ventaja definitiva para conductores
+          </div>
+          <h1
+            class="text-5xl lg:text-7xl font-display font-extrabold leading-[1.1] tracking-tight"
+          >
+            Deja de tomar <br />
+            viajes <span class="accent-gradient-text">mal pagados.</span>
+          </h1>
+          <p
+            class="text-lg lg:text-xl text-app-muted font-light leading-relaxed max-w-xl mx-auto lg:mx-0"
+          >
+            Calcula la rentabilidad real de cada carrera de InDrive antes de
+            aceptarla. El widget flotante te muestra si ganas o pierdes dinero
+            en cuestión de milisegundos.
+          </p>
+
+          <div
+            class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4"
+          >
+            <a
+              href="./assets/InDriveInspector.apk"
+              download
+              class="flex items-center justify-center gap-2 bg-app-accent text-app-bg px-8 py-4 rounded-full font-bold text-lg hover:bg-app-accentHover transition-all transform hover:scale-105 animate-pulse-glow"
+            >
+              <i class="ph-fill ph-android-logo text-xl"></i>
+              Descargar APK Gratis
+            </a>
+            <a
+              href="#como-funciona"
+              class="flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-lg border border-white/20 hover:bg-white/5 transition-colors"
+            >
+              Ver cómo funciona
+            </a>
+          </div>
+        </div>
+
+        <!-- Hero Image/Mockup -->
+        <div class="flex justify-center animate-float w-full h-auto">
+          <!-- Main Image showing the widget overlay -->
+          <img
+            src="./assets/indrive-inspector-overlay-on-map.webp"
+            alt="InDrive Inspector App overlay on map"
+            class="w-full h-auto object-cover"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section
+      id="beneficios"
+      class="py-24 bg-app-surface/30 border-y border-white/5 relative"
+    >
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <h2 class="text-3xl md:text-5xl font-display font-bold mb-4">
+            Información es poder, <br /><span class="gradient-text"
+              >y dinero.</span
+            >
+          </h2>
+          <p class="text-app-muted text-lg">
+            InDrive Inspector te da los datos que necesitas en milisegundos para
+            que no dudes a la hora de ofertar o aceptar un viaje.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <!-- Card 1 -->
+          <div
+            class="bg-app-surface border border-white/5 p-8 rounded-3xl hover:border-app-accent/30 transition-colors group"
+          >
+            <div
+              class="w-14 h-14 bg-app-bg rounded-2xl flex items-center justify-center mb-6 group-hover:bg-app-accent group-hover:text-app-bg transition-colors shadow-lg"
+            >
+              <i
+                class="ph ph-target text-3xl text-app-accent group-hover:text-app-bg"
+              ></i>
+            </div>
+            <h3 class="text-xl font-bold font-display mb-3">
+              Tus propias reglas
+            </h3>
+            <p class="text-app-muted leading-relaxed">
+              Establece tu precio ideal por kilómetro, valor de tu hora y tarifa
+              mínima. La app se adapta a tus metas financieras diarias.
+            </p>
+          </div>
+
+          <!-- Card 2 -->
+          <div
+            class="bg-app-surface border border-white/5 p-8 rounded-3xl hover:border-app-accent/30 transition-colors group"
+          >
+            <div
+              class="w-14 h-14 bg-app-bg rounded-2xl flex items-center justify-center mb-6 group-hover:bg-app-accent group-hover:text-app-bg transition-colors shadow-lg"
+            >
+              <i
+                class="ph ph-traffic-signal text-3xl text-app-accent group-hover:text-app-bg"
+              ></i>
+            </div>
+            <h3 class="text-xl font-bold font-display mb-3">Semáforo visual</h3>
+            <p class="text-app-muted leading-relaxed">
+              No pierdas tiempo leyendo números. Un indicador visual (Verde,
+              Amarillo, Rojo) te dirá instantáneamente la calidad del viaje.
+            </p>
+          </div>
+
+          <!-- Card 3 -->
+          <div
+            class="bg-app-surface border border-white/5 p-8 rounded-3xl hover:border-app-accent/30 transition-colors group"
+          >
+            <div
+              class="w-14 h-14 bg-app-bg rounded-2xl flex items-center justify-center mb-6 group-hover:bg-app-accent group-hover:text-app-bg transition-colors shadow-lg"
+            >
+              <i
+                class="ph ph-magic-wand text-3xl text-app-accent group-hover:text-app-bg"
+              ></i>
+            </div>
+            <h3 class="text-xl font-bold font-display mb-3">
+              Widget Inteligente
+            </h3>
+            <p class="text-app-muted leading-relaxed">
+              Aparece mágicamente sobre la app de InDrive justo cuando entra una
+              solicitud y se esconde cuando no lo necesitas. Cero molestias.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it Works Detailed Sections -->
+    <section id="como-funciona" class="pt-24 relative overflow-hidden z-10">
+      <div class="max-w-7xl mx-auto px-6 space-y-32">
+        <!-- Step 1: Config -->
+        <div class="flex flex-col lg:flex-row items-center gap-16">
+          <div class="lg:w-1/2 order-2 lg:order-1 flex justify-center">
+            <img
+              src="./assets/settings-screen.webp"
+              alt="Pantalla de ajustes"
+              class="w-full h-auto animate-float"
+            />
+          </div>
+          <div class="lg:w-1/2 order-1 lg:order-2 space-y-6">
+            <div
+              class="text-app-accent font-bold tracking-widest text-sm uppercase"
+            >
+              Paso 1
+            </div>
+            <h2 class="text-3xl lg:text-5xl font-display font-bold">
+              Define cuánto <br />vale tu trabajo.
+            </h2>
+            <p class="text-app-muted text-lg leading-relaxed">
+              Entra a la sección de <strong>Ajustes</strong> y configura tus
+              parámetros de rentabilidad. Ingresa cuánto deseas ganar por
+              kilómetro, el valor de tu hora y el precio mínimo por el cual
+              estás dispuesto a encender el motor.
+            </p>
+            <ul class="space-y-4 pt-4">
+              <li class="flex items-center gap-3">
+                <i class="ph-fill ph-check-circle text-app-accent text-xl"></i>
+                <span>Ajuste de precio por km</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <i class="ph-fill ph-check-circle text-app-accent text-xl"></i>
+                <span>Cálculo de precio por hora rentable</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <i class="ph-fill ph-check-circle text-app-accent text-xl"></i>
+                <span
+                  >Opción de incluir distancia hasta el pasajero (Punto A)</span
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Step 2: Activate -->
+        <div class="flex flex-col lg:flex-row items-center gap-16">
+          <div class="lg:w-1/2 space-y-6">
+            <div
+              class="text-app-accent font-bold tracking-widest text-sm uppercase"
+            >
+              Paso 2
+            </div>
+            <h2 class="text-3xl lg:text-5xl font-display font-bold">
+              Un toque y listo <br />para evaluar.
+            </h2>
+            <p class="text-app-muted text-lg leading-relaxed">
+              Con una interfaz súper minimalista, solo necesitas mantener
+              presionado el botón central para iniciar el inspector. El widget
+              quedará a la espera, invisible, hasta que abras InDrive.
+            </p>
+          </div>
+          <div class="lg:w-1/2 flex justify-center gap-6 relative">
+            <img
+              src="./assets/home-screen.webp"
+              alt="Pantalla principal"
+              class="w-full h-auto animate-float"
+            />
+          </div>
+        </div>
+
+        <!-- Step 3: Action -->
+        <div class="flex flex-col lg:flex-row items-center gap-16">
+          <div class="lg:w-1/2 order-2 lg:order-1 flex justify-center relative">
+            <!-- Background abstract blob -->
+            <div
+              class="absolute inset-0 bg-app-accent/10 blur-[100px] rounded-full"
+            ></div>
+            <img
+              src="./assets/widget-focus.webp"
+              alt="Widget en acción"
+              class="w-full h-auto relative"
+            />
+            <!-- Connecting line to highlight the widget -->
+          </div>
+          <div class="lg:w-1/2 order-1 lg:order-2 space-y-6">
+            <div
+              class="text-app-accent font-bold tracking-widest text-sm uppercase"
+            >
+              Paso 3
+            </div>
+            <h2 class="text-3xl lg:text-5xl font-display font-bold">
+              La magia sobre <br />tu mapa.
+            </h2>
+            <p class="text-app-muted text-lg leading-relaxed">
+              Al recibir una solicitud de viaje, el Inspector analiza la
+              distancia, el tiempo y la tarifa ofrecida. Te muestra un desglose
+              con las tarifas alternativas y si cumplen con tus metas usando un
+              código de colores.
+            </p>
+            <div
+              class="bg-app-surface border border-white/5 rounded-2xl p-6 mt-6"
+            >
+              <h4 class="font-bold mb-4">¿Qué significa cada color?</h4>
+              <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-3 h-3 rounded-full bg-app-success"></div>
+                  <span class="text-sm text-app-muted"
+                    ><strong class="text-white">Verde (Rentable):</strong>
+                    Cumple tus objetivos. Tómalo sin dudar.</span
+                  >
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="w-3 h-3 rounded-full bg-app-warning"></div>
+                  <span class="text-sm text-app-muted"
+                    ><strong class="text-white">Naranja (Al límite):</strong>
+                    Hasta un 15% por debajo. Depende de ti.</span
+                  >
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="w-3 h-3 rounded-full bg-app-danger"></div>
+                  <span class="text-sm text-app-muted"
+                    ><strong class="text-white">Rojo (No rentable):</strong>
+                    Pérdida de dinero y tiempo. Déjalo pasar.</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section id="descargar" class="py-24 relative z-20">
+      <div
+        class="absolute inset-0 bg-app-accent text-app-bg skew-y-[-2deg] transform origin-top-left -z-10"
+      ></div>
+      <div
+        class="max-w-4xl mx-auto px-6 text-center space-y-8 relative z-10 py-12"
+      >
+        <h2
+          class="text-4xl md:text-6xl font-display font-extrabold text-app-bg leading-tight"
+        >
+          Toma el control de tus <br />
+          ingresos hoy mismo.
+        </h2>
+        <p class="text-xl text-app-bg/80 max-w-2xl mx-auto font-medium">
+          Deja de adivinar y empieza a facturar con inteligencia. Descarga
+          InDrive Inspector y dile adiós a los viajes baratos.
+        </p>
+        <div class="pt-8 flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="./assets/InDriveInspector.apk"
+            download
+            class="bg-app-bg text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-app-surface transition-transform transform hover:scale-105 flex items-center justify-center gap-3 shadow-2xl"
+          >
+            <i class="ph-fill ph-android-logo text-2xl text-app-accent"></i>
+            Descargar APK
+          </a>
+        </div>
+        <p class="text-sm text-app-bg/60 font-medium pt-4">
+          *Requiere permisos de superposición de pantalla y grabar la pantalla
+          para funcionar.
+        </p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-app-bg pt-16 pb-8">
+      <div
+        class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6"
+      >
+        <div class="flex items-center gap-2">
+          <img src="./icon.svg" class="w-6 h-6 rounded bg-app-accent" />
+          <span class="font-display font-bold text-lg"
+            >InDrive <span class="text-app-accent">Inspector</span></span
+          >
+        </div>
+        <div class="text-app-muted text-sm flex gap-6 hidden">
+          <a href="#" class="hover:text-white transition-colors"
+            >Términos de Uso</a
+          >
+          <a href="#" class="hover:text-white transition-colors">Privacidad</a>
+        </div>
+        <div class="text-app-muted text-sm">
+          &copy; 2026 InDrive Inspector. Todos los derechos reservados.<br />
+          <span class="text-xs opacity-50"
+            >No afiliado oficialmente con InDrive.</span
+          >
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
