@@ -1,0 +1,24 @@
+name: Deploy Landing Page
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'landing/**' # Solo se activa si haces cambios dentro de la carpeta landing
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./landing # <- Aquí le dices a GitHub que solo suba esta carpeta
