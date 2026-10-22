@@ -1,0 +1,102 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# =========================================================================
+# Kotlin & Java Compiler Artifacts
+# =========================================================================
+*.class
+*.log
+*.ctxt
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+replay_pid*
+
+# Kotlin compiler specific tracking directories
+.kotlin/
+
+# =========================================================================
+# Gradle Build System
+# =========================================================================
+.gradle/
+build/
+**/build/
+!src/**/build/
+
+# Local build configurations and caches
+.gradletasknamecache
+gradle-app.setting
+
+# Ensure Gradle wrapper assets are explicitly tracked (Do NOT ignore these)
+!gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+# =========================================================================
+# JetBrains IntelliJ IDEA / Android Studio
+# =========================================================================
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Keep the dictionary if you want shared spelling definitions
+!.idea/dictionaries
+
+# =========================================================================
+# Android Specific (If building an Android/KMP App)
+# =========================================================================
+*.apk
+*.aab
+*.dex
+captures/
+.externalNativeBuild/
+.cxx/
+output-metadata.json
+
+# Local SDK and environment properties (contains machine-specific paths)
+local.properties
+
+# Secrets and Signing files (NEVER commit these)
+*.jks
+*.keystore
+signing/
+secrets.properties
+
+# =========================================================================
+# OS Generated Files
+# =========================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+desktop.ini
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
