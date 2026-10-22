@@ -3,7 +3,7 @@ name: Deploy Landing Page
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'landing/**' # Solo se activa si haces cambios dentro de la carpeta landing
 
