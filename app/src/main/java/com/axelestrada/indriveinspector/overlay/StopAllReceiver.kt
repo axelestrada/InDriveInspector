@@ -21,11 +21,9 @@ class StopAllReceiver : BroadcastReceiver() {
         } catch (_: Exception) {
             // nada que hacer
         }
-        // La notificación es compartida: se quita a mano al parar todo
+        // La misma notificación queda disponible para volver a activar el servicio.
         try {
-            val nm = context.getSystemService(Context.NOTIFICATION_SERVICE)
-                as android.app.NotificationManager
-            nm.cancel(Notifications.NOTIFICATION_ID)
+            Notifications.showStopped(context)
         } catch (_: Exception) {
             // nada que hacer
         }

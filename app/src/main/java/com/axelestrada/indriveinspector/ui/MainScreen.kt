@@ -61,6 +61,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import com.axelestrada.indriveinspector.MainActivity
 import com.axelestrada.indriveinspector.capture.ScreenCaptureService
 import com.axelestrada.indriveinspector.core.InspectorRepository
 import com.axelestrada.indriveinspector.core.Notifications
@@ -95,9 +96,14 @@ fun MainScreen() {
 
     var message by remember { mutableStateOf<String?>(null) }
     var resetSignal by remember { mutableIntStateOf(0) }
+    var continueNotificationStart by remember { mutableStateOf(false) }
     val navController = rememberNavController()
+    val mainActivity = context as? MainActivity
 
-    LaunchedEffect(Unit) { InspectorRepository.loadSettings(context) }
+    LaunchedEffect(Unit) {
+        InspectorRepository.loadSettings(context)
+        if (!servicesActive) Notifications.showStopped(context)
+    }
 
     // --- Permiso de captura de pantalla (MediaProjection) ---
     val projectionLauncher = rememberLauncherForActivityResult(
@@ -128,13 +134,33 @@ fun MainScreen() {
         requestProjection(context, projectionLauncher)
     }
 
+    val requestCapture: () -> Unit = {
+        val needsPermission = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        if (needsPermission) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        } else {
+            requestProjection(context, projectionLauncher)
+        }
+    }
+
     // --- Permiso de superposición (widget) ---
     val overlayPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
         if (Settings.canDrawOverlays(context)) {
-            // Todavía no se activa nada: falta el consentimiento de captura
-            message = "Permiso concedido. Mantén pulsado para iniciar."
+            if (continueNotificationStart) {
+                continueNotificationStart = false
+                requestCapture()
+            } else {
+                // Todavía no se activa nada: falta el consentimiento de captura
+                message = "Permiso concedido. Mantén pulsado para iniciar."
+            }
+        } else {
+            continueNotificationStart = false
         }
     }
 
@@ -158,18 +184,15 @@ fun MainScreen() {
 
             // 2) Se pide el consentimiento de captura. Los servicios (OCR y
             //    widget) SOLO arrancan si el usuario lo concede.
-            else -> {
-                val needsPermission = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                    ContextCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.POST_NOTIFICATIONS
-                    ) != PackageManager.PERMISSION_GRANTED
-                if (needsPermission) {
-                    notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                } else {
-                    requestProjection(context, projectionLauncher)
-                }
-            }
+            else -> requestCapture()
+        }
+    }
+
+    LaunchedEffect(mainActivity?.pendingNotificationStart) {
+        if (mainActivity?.pendingNotificationStart == true) {
+            mainActivity.consumeNotificationStart()
+            continueNotificationStart = true
+            onStart()
         }
     }
 
@@ -501,13 +524,7 @@ private fun stopEverything(context: Context) {
         context.stopService(Intent(context, OcrWatchService::class.java))
         context.stopService(Intent(context, ScreenCaptureService::class.java))
         InspectorRepository.setServicesActive(false)
-        try {
-            val nm = context.getSystemService(Context.NOTIFICATION_SERVICE)
-                as android.app.NotificationManager
-            nm.cancel(Notifications.NOTIFICATION_ID)
-        } catch (_: Exception) {
-            // nada que hacer
-        }
+        Notifications.showStopped(context)
     } catch (e: Exception) {
         Log.w("InDriveInspector", "Parada: ${e.message}")
     }

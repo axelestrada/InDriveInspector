@@ -22,6 +22,8 @@ object Notifications {
 
     const val CHANNEL_ID = "indrive_inspector"
     const val NOTIFICATION_ID = 4711
+    const val ACTION_START_FROM_NOTIFICATION =
+        "com.axelestrada.indriveinspector.action.START_FROM_NOTIFICATION"
 
     fun createChannel(context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
@@ -37,7 +39,7 @@ object Notifications {
         nm.createNotificationChannel(channel)
     }
 
-    fun build(context: Context, text: String): Notification {
+    fun build(context: Context, text: String, active: Boolean = true): Notification {
         val open = PendingIntent.getActivity(
             context,
             0,
@@ -45,24 +47,50 @@ object Notifications {
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val stop = PendingIntent.getBroadcast(
-            context,
-            1,
-            Intent(context, StopAllReceiver::class.java),
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        val action = if (active) {
+            PendingIntent.getBroadcast(
+                context,
+                1,
+                Intent(context, StopAllReceiver::class.java),
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        } else {
+            PendingIntent.getActivity(
+                context,
+                2,
+                Intent(context, MainActivity::class.java).apply {
+                    this.action = ACTION_START_FROM_NOTIFICATION
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                },
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
 
         return NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentTitle("InDrive Inspector")
             .setContentText(text)
             .setSmallIcon(android.R.drawable.ic_menu_compass)
-            .setOngoing(true)
+            .setOngoing(active)
             .setContentIntent(open)
             .addAction(
-                android.R.drawable.ic_menu_close_clear_cancel,
-                "Detener",
-                stop
+                if (active) android.R.drawable.ic_menu_close_clear_cancel
+                else android.R.drawable.ic_media_play,
+                if (active) "Desactivar" else "Activar",
+                action
             )
             .build()
+    }
+
+    /** Mantiene a mano el control de activación cuando el inspector está parado. */
+    fun showStopped(context: Context) {
+        createChannel(context)
+        val notification = build(
+            context,
+            "Servicio detenido · toca Activar para iniciarlo",
+            active = false
+        )
+        val manager = context.getSystemService(Context.NOTIFICATION_SERVICE)
+            as NotificationManager
+        manager.notify(NOTIFICATION_ID, notification)
     }
 }
